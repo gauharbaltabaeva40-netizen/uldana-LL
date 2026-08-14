@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Арыстанәлі Ұлдана | Ағылшын курсы</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --accent: #2D7D6B;
+            --accent-light: #E8F3F0;
+            --accent-dark: #1F5C4E;
+            --cream: #FCF9F5;
+            --text: #1E2B3A;
+            --gray: #6B7A8A;
+            --border: #E5E9ED;
+        }
+        * { font-family: 'Inter', system-ui, -apple-system, sans-serif; }
+        body { background: var(--cream); color: var(--text); }
+        .container-custom { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+        .btn-primary { background: var(--accent); color: #fff; padding: 14px 32px; border-radius: 12px; font-weight: 600; border: none; cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-primary:hover { background: var(--accent-dark); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(45,125,107,0.3); }
+        .btn-outline { background: transparent; color: var(--text); padding: 14px 32px; border-radius: 12px; font-weight: 600; border: 2px solid var(--border); cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-outline:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+        .card-premium { background: #fff; border-radius: 20px; padding: 32px; box-shadow: 0 8px 40px rgba(0,0,0,0.06); border: 1px solid var(--border); transition: 0.3s; }
+        .card-premium:hover { box-shadow: 0 12px 48px rgba(0,0,0,0.10); transform: translateY(-4px); }
+        .input-field { width: 100%; padding: 14px 16px; border: 2px solid var(--border); border-radius: 12px; font-size: 16px; background: #fff; transition: 0.2s; }
+        .input-field:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 4px rgba(45,125,107,0.1); }
+        .lang-switcher { display: flex; gap: 4px; background: #f0f2f5; border-radius: 8px; padding: 3px; }
+        .lang-switcher button { padding: 6px 12px; border-radius: 6px; border: none; background: transparent; font-weight: 500; cursor: pointer; color: var(--gray); }
+        .lang-switcher button.active { background: #fff; color: var(--text); box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 16px; }
+        .modal-content { background: #fff; border-radius: 24px; padding: 32px; max-width: 520px; width: 100%; max-height: 90vh; overflow-y: auto; }
+        .badge-popular { background: var(--accent); color: #fff; font-size: 12px; font-weight: 600; padding: 4px 14px; border-radius: 20px; }
+        .quiz-progress { height: 4px; background: #eee; border-radius: 4px; overflow: hidden; }
+        .quiz-progress .fill { height: 100%; background: var(--accent); transition: width 0.4s; }
+        .faq-question { cursor: pointer; padding: 16px 0; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; font-weight: 600; }
+        .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; color: var(--gray); }
+        .faq-answer.open { max-height: 300px; padding: 8px 0 20px 0; }
+        .section-spacing { padding: 72px 0; }
+        @media (max-width: 640px) { .section-spacing { padding: 48px 0; } .container-custom { padding: 0 16px; } .card-premium { padding: 24px; } .modal-content { padding: 24px; } }
+        .page { display: none; }
+        .page.active { display: block; }
+        .nav-mobile { display: none; flex-direction: column; gap: 4px; background: #fff; padding: 16px 20px; border-radius: 16px; box-shadow: 0 12px 48px rgba(0,0,0,0.1); position: absolute; top: 72px; right: 16px; min-width: 200px; border: 1px solid var(--border); z-index: 100; }
+        .nav-mobile.open { display: flex; }
+        .nav-mobile a { padding: 10px 12px; border-radius: 8px; font-weight: 500; color: var(--text); text-decoration: none; }
+        .nav-mobile a:hover { background: var(--accent-light); color: var(--accent); }
+        .sticky-cta { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255,255,255,0.92); backdrop-filter: blur(12px); padding: 12px 24px; border-top: 1px solid var(--border); z-index: 1000; display: flex; gap: 12px; justify-content: center; }
+        *:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+        @media (prefers-reduced-motion: reduce) { * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } }
+        /* header */
+        header { background: rgba(255,255,255,0.8); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 50; }
+        .header-inner { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+        @media (min-width: 768px) { .header-inner { height: 80px; } }
+        .brand { font-weight: 700; font-size: 1.25rem; color: var(--text); text-decoration: none; display: flex; align-items: center; gap: 6px; }
+        .brand span { color: var(--accent); }
+        .nav-desktop { display: none; align-items: center; gap: 24px; }
+        .nav-desktop a { font-size: 0.9rem; font-weight: 500; color: var(--text); text-decoration: none; transition: 0.2s; }
+        .nav-desktop a:hover { color: var(--accent); }
+        @media (min-width: 768px) { .nav-desktop { display: flex; } }
+        .mobile-toggle { display: block; background: none; border: none; padding: 8px; cursor: pointer; }
+        @media (min-width: 768px) { .mobile-toggle { display: none; } }
+        .footer { background: #1A2A3A; color: rgba(255,255,255,0.8); padding: 48px 0 24px; }
+        .footer a { color: rgba(255,255,255,0.6); text-decoration: none; transition: 0.2s; }
+        .footer a:hover { color: #fff; }
+    </style>
+</head>
+<body>
+
+    <!-- ===== HEADER ===== -->
+    <header>
+        <div class="container-custom header-inner">
+            <a href="#" class="brand" data-page="home"><span>ᴀ</span> Арыстанәлі</a>
+            <div class="nav-desktop">
+                <a href="#" data-page="program">Бағдарлама</a>
+                <a href="#" data-page="pricing">Тарифтер</a>
+                <a href="#" data-page="faq">Сұрақтар</a>
+                <a href="#" data-page="quiz">Тегін диагностика</a>
+                <div class="lang-switcher">
+                    <button class="lang-btn active" data-lang="kk">Қаз</button>
+                    <button class="lang-btn" data-lang="ru">Рус</button>
+                </div>
+                <a href="https://wa.me/77073157509" target="_blank" class="btn-primary text-sm px-5 py-2 rounded-lg">WhatsApp-қа жазу</a>
+            </div>
+            <button class="mobile-toggle" id="mobileToggle" aria-label="Мәзір">
+                <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+            </button>
+        </div>
+        <div class="nav-mobile" id="mobileMenu">
+            <a href="#" data-page="program">Бағдарлама</a>
+            <a href="#" data-page="pricing">Тарифтер</a>
+            <a href="#" data-page="faq">Сұрақтар</a>
+            <a href="#" data-page="quiz">Тегін диагностика</a>
+            <a href="https://wa.me/77073157509" target="_blank" class="btn-primary text-center mt-2">WhatsApp-қа жазу</a>
+        </div>
+    </header>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main>
+
+        <!-- ===== HOME PAGE ===== -->
+        <section id="page-home" class="page active">
+
+            <!-- Hero -->
+            <section class="pt-8 pb-12 md:pt-16 md:pb-20">
+                <div class="container-custom">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                        <div>
+                            <span class="inline-block text-sm font-medium text-[#2D7D6B] bg-[#E8F3F0] px-4 py-1.5 rounded-full mb-4">Онлайн ағылшын курсы · Қазақша түсіндірумен</span>
+                            <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold leading-[1.15] text-[#1A2A3A] mb-5">Ағылшынша түсінбей қалмаңыз — жүйелі түрде сөйлей бастаңыз</h1>
+                            <p class="text-lg text-[#6B7A8A] leading-relaxed max-w-lg mb-6">Курс сізге өз деңгейіңізден бастауға, тұрақты практика құруға және мақсатыңызға сай ағылшын қолдануға көмектеседі.</p>
+                            <div class="flex flex-wrap gap-4 mb-6">
+                                <button class="btn-primary" data-page="quiz">Тегін деңгейімді анықтау</button>
+                                <button class="btn-outline" data-page="program">Курс бағдарламасын көру</button>
+                            </div>
+                            <p class="text-sm text-[#6B7A8A]">Онлайн формат · Қазақша/орысша қолдау · Өзіңізге сай деңгей</p>
+                        </div>
+                        <div class="flex justify-center lg:justify-end">
+                            <div class="w-full max-w-md aspect-[4/5] bg-[#E8F3F0] rounded-3xl flex items-center justify-center border-2 border-dashed border-[#2D7D6B]/30">
+                                <div class="text-center p-8">
+                                    <div class="w-20 h-20 mx-auto mb-4 rounded-full bg-[#2D7D6B]/10 flex items-center justify-center text-4xl">📚</div>
+                                    <p class="text-[#6B7A8A] text-sm font-medium">[Ұлдана Арыстанәлі]</p>
+                                    <p class="text-[#6B7A8A] text-xs">Фото / медиа</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Audience -->
+            <section class="section-spacing bg-white">
+                <div class="container-custom">
+                    <h2 class="text-3xl md:text-4xl font-bold text-center text-[#1A2A3A] mb-12">Бұл курс кімге арналған?</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="card-premium text-center cursor-pointer hover:border-[#2D7D6B]" data-page="quiz" data-prefill="beginner">
+                            <div class="w-14 h-14 rounded-full bg-[#E8F3F0] flex items-center justify-center mx-auto mb-4 text-2xl">🌟</div>
+                            <h3 class="font-bold text-xl mb-2">Нөлден бастаймын</h3>
+                            <p class="text-[#6B7A8A] text-sm">Ешқандай білімсіз бастап, жүйелі түрде негіздерді меңгергіңіз келе ме?</p>
+                        </div>
+                        <div class="card-premium text-center cursor-pointer hover:border-[#2D7D6B]" data-page="quiz" data-prefill="speaking_gap">
+                            <div class="w-14 h-14 rounded-full bg-[#E8F3F0] flex items-center justify-center mx-auto mb-4 text-2xl">🗣️</div>
+                            <h3 class="font-bold text-xl mb-2">Түсінемін, бірақ сөйлей алмаймын</h3>
+                            <p class="text-[#6B7A8A] text-sm">Сөздерді білесіз, бірақ сөйлеуге қорқасыз ба? Практика керек пе?</p>
+                        </div>
+                        <div class="card-premium text-center cursor-pointer hover:border-[#2D7D6B]" data-page="quiz" data-prefill="work">
+                            <div class="w-14 h-14 rounded-full bg-[#E8F3F0] flex items-center justify-center mx-auto mb-4 text-2xl">🎯</div>
+                            <h3 class="font-bold text-xl mb-2">Оқу/жұмыс/саяхат үшін</h3>
+                            <p class="text-[#6B7A8A] text-sm">Нақты мақсат үшін тілді тез және тиімді үйренгіңіз келе ме?</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Problem / Solution -->
+            <section class="section-spacing bg-[#FCF9F5]">
+                <div class="container-custom">
+                    <h2 class="text-3xl md:text-4xl font-bold text-center text-[#1A2A3A] mb-10">Қазір vs Курста</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+                        <div class="bg-white/70 rounded-2xl p-6 md:p-8 border border-[#E5E9ED]">
+                            <h3 class="font-bold text-lg mb-4 text-[#6B7A8A]">Қазір</h3>
+                            <ul class="space-y-3">
+                                <li class="flex items-center gap-3 text-[#6B7A8A]"><svg class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>Сөзден қорқу</li>
+                                <li class="flex items-center gap-3 text-[#6B7A8A]"><svg class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>Хаосты видео көру</li>
+                                <li class="flex items-center gap-3 text-[#6B7A8A]"><svg class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>Грамматиканы жеке білу</li>
+                                <li class="flex items-center gap-3 text-[#6B7A8A]"><svg class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>Тұрақсыз оқу</li>
+                            </ul>
+                        </div>
+                        <div class="bg-[#E8F3F0] rounded-2xl p-6 md:p-8 border border-[#2D7D6B]/20">
+                            <h3 class="font-bold text-lg mb-4 text-[#2D7D6B]">Курста</h3>
+                            <ul class="space-y-3">
+                                <li class="flex items-center gap-3 text-[#1E2B3A]"><svg class="w-5 h-5 text-[#2D7D6B]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Нақты жоспар</li>
+                                <li class="flex items-center gap-3 text-[#1E2B3A]"><svg class="w-5 h-5 text-[#2D7D6B]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Шағын қадамдар</li>
+                                <li class="flex items-center gap-3 text-[#1E2B3A]"><svg class="w-5 h-5 text-[#2D7D6B]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Сөйлесу практикасы</li>
+                                <li class="flex items-center gap-3 text-[#1E2B3A]"><svg class="w-5 h-5 text-[#2D7D6B]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Кері байланыс</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <p class="text-sm text-[#6B7A8A] text-center mt-6 italic">Нәтиже бастапқы деңгейге, тұрақты қатысуға және практикаға тәуелді.</p>
+                </div>
+            </section>
+
+            <!-- How it works -->
+            <section class="section-spacing bg-white">
+                <div class="container-custom">
+                    <h2 class="text-3xl md:text-4xl font-bold text-center text-[#1A2A3A] mb-10">Курс қалай жұмыс істейді?</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+                        <div class="text-center">
+                            <div class="w-16 h-16 rounded-full bg-[#E8F3F0] flex items-center justify-center mx-auto mb-4 text-2xl font-bold text-[#2D7D6B]">1</div>
+                            <h3 class="font-bold text-lg mb-2">Деңгейіңді анықтаймыз</h3>
+                            <p class="text-[#6B7A8A] text-sm">Тегін квиз арқылы қазіргі деңгейіңізді және мақсатыңызды анықтаймыз.</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-16 h-16 rounded-full bg-[#E8F3F0] flex items-center justify-center mx-auto mb-4 text-2xl font-bold text-[#2D7D6B]">2</div>
+                            <h3 class="font-bold text-lg mb-2">Саған сай жоспармен оқисың</h3>
+                            <p class="text-[#6B7A8A] text-sm">Сіздің деңгейіңіз бен уақытыңызға бейімделген бағдарлама.</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-16 h-16 rounded-full bg-[#E8F3F0] flex items-center justify-center mx-auto mb-4 text-2xl font-bold text-[#2D7D6B]">3</div>
+                            <h3 class="font-bold text-lg mb-2">Практика және кері байланыспен бекітесің</h3>
+                            <p class="text-[#6B7A8A] text-sm">Әр сабақтан кейін үй тапсырмасы мен кері байланыс.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Program (preview) -->
+            <section id="program-preview" class="section-spacing bg-[#FCF9F5]">
+                <div class="container-custom">
+                    <h2 class="text-3xl md:text-4xl font-bold text-center text-[#1A2A3A] mb-8">Бағдарлама</h2>
+                    <div class="max-w-3xl mx-auto bg-white rounded-2xl p-6 md:p-8 border border-[#E5E9ED]">
+                        <div class="flex flex-wrap justify-center gap-2 mb-6">
+                            <button class="level-tab px-5 py-2.5 rounded-full text-sm font-medium bg-[#2D7D6B] text-white shadow-lg" data-level="a1">Beginner (A1)</button>
+                            <button class="level-tab px-5 py-2.5 rounded-full text-sm font-medium bg-white text-[#1E2B3A] hover:bg-[#E8F3F0] border border-[#E5E9ED]" data-level="a2">Elementary (A2)</button>
+                            <button class="level-tab px-5 py-2.5 rounded-full text-sm font-medium bg-white text-[#1E2B3A] hover:bg-[#E8F3F0] border border-[#E5E9ED]" data-level="b1">Pre-Intermediate (B1)</button>
+                        </div>
+                        <div id="level-content">
+                            <h3 class="font-bold text-xl mb-1">Beginner (A1)</h3>
+                            <p class="text-[#6B7A8A] mb-4">Нөлден бастаушыларға</p>
+                            <ul class="space-y-2">
+                                <li class="flex items-center gap-3 text-[#1E2B3A]"><svg class="w-4 h-4 text-[#2D7D6B]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Алфавит, сандар, танысу</li>
+                                <li class="flex items-center gap-3 text-[#1E2B3A]"><svg class="w-4 h-4 text-[#2D7D6B]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Қарапайым сөздер мен сөз тіркестері</li>
+                                <li class="flex items-center gap-3 text-[#1E2B3A]"><svg class="w-4 h-4 text-[#2D7D6B]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Негізгі грамматика</li>
+                            </ul>
+                        </div>
+                        <div class="mt-6 pt-6 border-t border-[#E5E9ED]">
+                            <button class="btn-outline text-sm px-5 py-2" data-page="quiz">Қай деңгейден бастайтынымды білмеймін → Квизді толтыру</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Instructor -->
+            <section class="section-spacing bg-white">
+                <div class="container-custom">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-10 items-center max-w-5xl mx-auto">
+                        <div>
+                            <h2 class="text-3xl md:text-4xl font-bold text-[#1A2A3A] mb-4">Автор туралы</h2>
+                            <p class="text-lg font-semibold">Ұлдана Арыстанәлі</p>
+                            <p class="text-[#6B7A8A]">Ағылшын тілі оқытушысы</p>
+                            <p class="text-[#6B7A8A] leading-relaxed mt-2">Қазақстандағы жас маман. Оқыту әдісі — түсінікті, жүйелі және нәтижеге бағытталған.</p>
+                            <a href="https://www.instagram.com/arystanali_u/" target="_blank" class="btn-primary inline-flex mt-4">Instagram-ға өту</a>
+                        </div>
+                        <div class="flex justify-center">
+                            <div class="w-64 h-64 md:w-72 md:h-72 rounded-3xl bg-[#E8F3F0] flex items-center justify-center border-2 border-dashed border-[#2D7D6B]/30">
+                                <div class="text-center p-6">
+                                    <div class="text-6xl mb-3">👩‍🏫</div>
+                                    <p class="text-[#6B7A8A] text-sm font-medium">[Ұлдана Арыстанәлі]</p>
+                                    <p class="text-[#6B7A8A] text-xs">Фото</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Testimonials placeholder -->
+            <section class="section-spacing bg-[#FCF9F5]">
+                <div class="container-custom text-center">
+                    <h2 class="text-3xl md:text-4xl font-bold text-[#1A2A3A] mb-4">Шәкірт пікірлері</h2>
+                    <div class="max-w-2xl mx-auto bg-white/80 rounded-2xl p-8 border border-dashed border-[#E5E9ED]">
+                        <p class="text-[#6B7A8A]">Шәкірт пікірлері осында шығады</p>
+                        <p class="text-xs text-[#6B7A8A] mt-2">[ Нақты пікірлер CMS-ке қосылғанда көрсетіледі ]</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Pricing -->
+            <section id="pricing-preview" class="section-spacing bg-white">
+                <div class="container-custom">
+                    <h2 class="text-3xl md:text-4xl font-bold text-center text-[#1A2A3A] mb-10">Тарифтер</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+                        <!-- Standart -->
+                        <div class="card-premium flex flex-col border-[#2D7D6B] shadow-lg relative">
+                            <div class="absolute -top-3 left-1/2 -translate-x-1/2"><span class="badge-popular">Ең қолайлы</span></div>
+                            <h3 class="font-bold text-xl mb-1">Standart</h3>
+                            <p class="text-sm text-[#6B7A8A] mb-3">Өздігінен оқығысы келетіндерге</p>
+                            <div class="mb-4"><span class="text-3xl font-extrabold text-[#1A2A3A]">₸50 000</span><span class="text-[#6B7A8A] text-sm ml-1">/ай</span></div>
+                            <ul class="space-y-2 flex-1 mb-6">
+                                <li class="flex items-start gap-2 text-sm text-[#1E2B3A]"><svg class="w-4 h-4 text-[#2D7D6B] flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Группалық сабақтар</li>
+                                <li class="flex items-start gap-2 text-sm text-[#1E2B3A]"><svg class="w-4 h-4 text-[#2D7D6B] flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Аптасына 2 сабақ</li>
+                                <li class="flex items-start gap-2 text-sm text-[#1E2B3A]"><svg class="w-4 h-4 text-[#2D7D6B] flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Жазылым материалдары</li>
+                                <li class="flex items-start gap-2 text-sm text-[#1E2B3A]"><svg class="w-4 h-4 text-[#2D7D6B] flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Кері байланыс чаты</li>
+                            </ul>
+                            <button class="btn-primary w-full justify-center" data-tariff="standart">Осы тарифті таңдау</button>
+                        </div>
+                        <!-- Pro -->
+                        <div class="card-premium flex flex-col">
+                            <h3 class="font-bold text-xl mb-1">Pro</h3>
+                            <p class="text-sm text-[#6B7A8A] mb-3">Жылдам нәтиже қалайтындарға</p>
+                            <div class="mb-4"><span class="text-3xl font-extrabold text-[#1A2A3A]">₸75 000</span><span class="text-[#6B7A8A] text-sm ml-1">/ай</span></div>
+                            <ul class="space-y-2 flex-1 mb-6">
+                                <li class="flex items-start gap-2 text-sm text-[#1E2B3A]"><svg class="w-4 h-4 text-[#2D7D6B] flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Жеке сабақтар</li>
+                                <li class="flex items-start gap-2 text-sm text-[#1E2B3A]"><svg class="w-4 h-4 text-[#2D7D6B] flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Аптасына 3 сабақ</li>
+                                <li class="flex items-start gap-2 text-sm text-[#1E2B3A]"><svg class="w-4 h-4 text-[#2D7D6B] flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Үй тапсырмасы тексеру</li>
+                                <li class="flex items-start gap-2 text-sm text-[#1E2B3A]"><svg class="w-4 h-4 text-[#2D7D6B] flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>WhatsApp қолдау</li>
+                            </ul>
+                            <button class="btn-primary w-full justify-center" data-tariff="pro">Осы тарифті таңдау</button>
+                        </div>
+                        <!-- Individual -->
+                        <div class="card-premium flex flex-col">
+                            <h3 class="font-bold text-xl mb-1">Individual</h3>
+                            <p class="text-sm text-[#6B7A8A] mb-3">Ерекше қажеттіліктері барларға</p>
+                            <div class="mb-4"><span class="text-3xl font-extrabold text-[#1A2A3A]">₸120 000</span><span class="text-[#6B7A8A] text-sm ml-1">/ай</span></div>
+                            <ul class="space-y-2 flex-1 mb-6">
+                                <li class="flex items-start gap-2 text-sm text-[#1E2B3A]"><svg class="w-4 h-4 text-[#2D7D6B] flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Толық жеке бағдарлама</li>
+                                <li class="flex items-start gap-2 text-sm text-[#1E2B3A]"><svg class="w-4 h-4 text-[#2D7D6B] flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Күнделікті байланыс</li>
+                                <li class="flex items-start gap-2 text-sm text-[#1E2B3A]"><svg class="w-4 h-4 text-[#2D7D6B] flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Кез келген уақытта қолдау</li>
+                                <li class="flex items-start gap-2 text-sm text-[#1E2B3A]"><svg class="w-4 h-4 text-[#2D7D6B] flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Деңгейге толық бейімдеу</li>
+                            </ul>
+                            <button class="btn-primary w-full justify-center" data-tariff="individual">Осы тарифті таңдау</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- FAQ -->
+            <section class="section-spacing bg-[#FCF9F5]">
+                <div class="container-custom max-w-3xl mx-auto">
+                    <h2 class="text-3xl md:text-4xl font-bold text-center text-[#1A2A3A] mb-10">Жиі қойылатын сұрақтар</h2>
+                    <div class="bg-white rounded-2xl p-4 md:p-6 border border-[#E5E9ED]">
+                        <div class="faq-item"><div class="faq-question" data-faq="0">Нөлден бастауға бола ма?<svg class="w-5 h-5 text-[#6B7A8A] transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></div><div class="faq-answer">Иә, курс нөлдік деңгейден бастауға арналған. Біз сіздің қазіргі деңгейіңізге қарай бағдарлама құрамыз.</div></div>
+                        <div class="faq-item"><div class="faq-question" data-faq="1">Сабақ қай тілде түсіндіріледі?<svg class="w-5 h-5 text-[#6B7A8A] transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></div><div class="faq-answer">Сабақтар қазақ және орыс тілдерінде түсіндіріледі. Сіз өзіңізге ыңғайлы тілді таңдай аласыз.</div></div>
+                        <div class="faq-item"><div class="faq-question" data-faq="2">Қанша уақыт оқу керек?<svg class="w-5 h-5 text-[#6B7A8A] transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></div><div class="faq-answer">Бағдарлама 3–6 айға есептелген. Нақты мерзім сіздің бастапқы деңгейіңіз бен мақсатыңызға байланысты.</div></div>
+                        <div class="faq-item"><div class="faq-question" data-faq="3">Деңгейді қалай анықтаймын?<svg class="w-5 h-5 text-[#6B7A8A] transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></div><div class="faq-answer">Сайттағы тегін квизді толтырыңыз. 4–6 сұрақтан кейін сізге қай бағыт жақын екенін көрсетеміз.</div></div>
+                        <div class="faq-item"><div class="faq-question" data-faq="4">Төлем қалай жүреді?<svg class="w-5 h-5 text-[#6B7A8A] transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></div><div class="faq-answer">Төлем [Kaspi/Halyk] арқылы жүреді. Нақты деректерді менеджерден сұраңыз.</div></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Final CTA -->
+            <section class="section-spacing bg-[#1A2A3A] text-white">
+                <div class="container-custom text-center max-w-3xl mx-auto">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-5">Ағылшын тілін кейінге қалдырмай, бүгін өз деңгейіңді біл</h2>
+                    <button class="btn-primary bg-white text-[#1A2A3A] hover:bg-[#E8F3F0]" data-page="quiz">Тегін диагностикадан өту</button>
+                </div>
+            </section>
+
+        </section>
+
+        <!-- ===== PROGRAM PAGE ===== -->
+        <section id="page-program" class="page">
+            <div class="container-custom py-12">
+                <h1 class="text-3xl md:text-4xl font-bold text-[#1A2A3A] mb-6">Бағдарлама</h1>
+                <p class="text-[#6B7A8A] mb-8">Курс деңгейлері және оқу жоспары</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="card-premium"><h3 class="font-bold text-xl">Beginner (A1)</h3><p class="text-[#6B7A8A] text-sm">Нөлден бастаушыларға</p><ul class="mt-3 space-y-1 text-sm"><li>• Алфавит, сандар, танысу</li><li>• Қарапайым сөздер</li><li>• Негізгі грамматика</li></ul></div>
+                    <div class="card-premium"><h3 class="font-bold text-xl">Elementary (A2)</h3><p class="text-[#6B7A8A] text-sm">Негіздерді білетіндерге</p><ul class="mt-3 space-y-1 text-sm"><li>• Күнделікті тақырыптар</li><li>• Өзін таныстыру</li><li>• Өткен/келер шақтар</li></ul></div>
+                    <div class="card-premium"><h3 class="font-bold text-xl">Pre-Intermediate (B1)</h3><p class="text-[#6B7A8A] text-sm">Орташа деңгейдегілерге</p><ul class="mt-3 space-y-1 text-sm"><li>• Кең тақырыптарда сөйлесу</li><li>• Пікір білдіру</li><li>• Күрделі грамматика</li></ul></div>
+                </div>
+                <div class="mt-8"><button class="btn-primary" data-page="quiz">Квизді толтыру</button></div>
+            </div>
+        </section>
+
+        <!-- ===== PRICING PAGE ===== -->
+        <section id="page-pricing" class="page">
+            <div class="container-custom py-12">
+                <h1 class="text-3xl md:text-4xl font-bold text-[#1A2A3A] mb-6">Тарифтер</h1>
+                <p class="text-[#6B7A8A] mb-8">Өзіңізге сай тарифті таңдаңыз</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- копия тарифов из home -->
+                    <div class="card-premium flex flex-col border-[#2D7D6B] shadow-lg relative">
+                        <div class="absolute -top-3 left-1/2 -translate-x-1/2"><span class="badge-popular">Ең қолайлы</span></div>
+                        <h3 class="font-bold text-xl">Standart</h3>
+                        <p class="text-sm text-[#6B7A8A] mb-3">Өздігінен оқығысы келетіндерге</p>
+                        <div class="mb-4"><span class="text-3xl font-extrabold text-[#1A2A3A]">₸50 000</span><span class="text-[#6B7A8A] text-sm ml-1">/ай</span></div>
+                        <ul class="space-y-2 flex-1 mb-6 text-sm"><li>• Группалық сабақтар</li><li>• Аптасына 2 сабақ</li><li>• Жазылым материалдары</li><li>• Кері байланыс чаты</li></ul>
+                        <button class="btn-primary w-full justify-center" data-tariff="standart">Осы тарифті таңдау</button>
+                    </div>
+                    <div class="card-premium flex flex-col">
+                        <h3 class="font-bold text-xl">Pro</h3>
+                        <p class="text-sm text-[#6B7A8A] mb-3">Жылдам нәтиже қалайтындарға</p>
+                        <div class="mb-4"><span class="text-3xl font-extrabold text-[#1A2A3A]">₸75 000</span><span class="text-[#6B7A8A] text-sm ml-1">/ай</span></div>
+                        <ul class="space-y-2 flex-1 mb-6 text-sm"><li>• Жеке сабақтар</li><li>• Аптасына 3 сабақ</li><li>• Үй тапсырмасы тексеру</li><li>• WhatsApp қолдау</li></ul>
+                        <button class="btn-primary w-full justify-center" data-tariff="pro">Осы тарифті таңдау</button>
+                    </div>
+                    <div class="card-premium flex flex-col">
+                        <h3 class="font-bold text-xl">Individual</h3>
+                        <p class="text-sm text-[#6B7A8A] mb-3">Ерекше қажеттіліктері барларға</p>
+                        <div class="mb-4"><span class="text-3xl font-extrabold text-[#1A2A3A]">₸120 000</span><span class="text-[#6B7A8A] text-sm ml-1">/ай</span></div>
+                        <ul class="space-y-2 flex-1 mb-6 text-sm"><li>• Толық жеке бағдарлама</li><li>• Күнделікті байланыс</li><li>• Кез келген уақытта қолдау</li><li>• Деңгейге толық бейімдеу</li></ul>
+                        <button class="btn-primary w-full justify-center" data-tariff="individual">Осы тарифті таңдау</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== QUIZ PAGE ===== -->
+        <section id="page-quiz" class="page">
+            <div class="container-custom py-12 max-w-lg mx-auto">
+                <div class="bg-white rounded-2xl p-6 md:p-8 border border-[#E5E9ED]">
+                    <h2 class="text-2xl font-bold mb-2">Деңгейіңді анықта</h2>
+                    <p class="text-[#6B7A8A] text-sm mb-4">4 қарапайым сұрақ, 1 минут</p>
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-sm font-medium text-[#6B7A8A]">Қадам <span id="quiz-step">1</span>/4</span>
+                        <span class="text-sm font-medium text-[#2D7D6B]" id="quiz-percent">0%</span>
+                    </div>
+                    <div class="quiz-progress mb-6"><div class="fill" id="quiz-progress-fill" style="width:0%"></div></div>
+                    <div id="quiz-content"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== THANK YOU PAGE ===== -->
+        <section id="page-thankyou" class="page">
+            <div class="min-h-screen bg-[#FCF9F5] flex items-center justify-center px-4 py-12">
+                <div class="max-w-md w-full bg-white rounded-2xl p-8 border border-[#E5E9ED] text-center">
+                    <div class="w-20 h-20 rounded-full bg-[#E8F3F0] flex items-center justify-center mx-auto mb-4 text-5xl">🎉</div>
+                    <h2 class="text-2xl font-bold mb-2">Өтінім қабылданды!</h2>
+                    <p class="text-[#6B7A8A] mb-6">Менеджер сізбен жақын арада байланысады.</p>
+                    <div class="flex flex-col gap-3">
+                        <a href="https://wa.me/77073157509" target="_blank" class="btn-primary w-full justify-center">WhatsApp-қа жазу</a>
+                        <a href="https://www.instagram.com/arystanali_u/" target="_blank" class="btn-outline w-full justify-center">Instagram-ға қайту</a>
+                        <button class="btn-outline w-full justify-center" data-page="home">Басты бетке</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== PRIVACY ===== -->
+        <section id="page-privacy" class="page">
+            <div class="container-custom py-12 max-w-3xl mx-auto">
+                <div class="bg-white rounded-2xl p-6 md:p-8 border border-[#E5E9ED]">
+                    <h1 class="text-3xl font-bold mb-6">Құпиялылық саясаты</h1>
+                    <p>[ Құпиялылық саясаты мәтіні. Нақты заңдық мәтін CMS-ке қосылады. ]</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== TERMS ===== -->
+        <section id="page-terms" class="page">
+            <div class="container-custom py-12 max-w-3xl mx-auto">
+                <div class="bg-white rounded-2xl p-6 md:p-8 border border-[#E5E9ED]">
+                    <h1 class="text-3xl font-bold mb-6">Пайдалану шарттары</h1>
+                    <p>[ Пайдалану шарттары мәтіні. Нақты заңдық мәтін CMS-ке қосылады. ]</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer">
+        <div class="container-custom">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+                <div><h3 class="text-white font-bold text-lg mb-3">Арыстанәлі Ұлдана</h3><p class="text-sm text-white/60">Онлайн ағылшын курсы. Қазақша түсіндірумен.</p></div>
+                <div><h4 class="text-white font-semibold text-sm uppercase tracking-wider mb-3">Сілтемелер</h4>
+                    <div class="flex flex-col gap-2 text-sm">
+                        <a href="#" data-page="program">Бағдарлама</a>
+                        <a href="#" data-page="pricing">Тарифтер</a>
+                        <a href="#" data-page="quiz">Тегін диагностика</a>
+                        <a href="#" data-page="privacy">Құпиялылық саясаты</a>
+                        <a href="#" data-page="terms">Пайдалану шарттары</a>
+                    </div>
+                </div>
+                <div><h4 class="text-white font-semibold text-sm uppercase tracking-wider mb-3">Байланыс</h4>
+                    <div class="flex flex-col gap-2 text-sm">
+                        <a href="https://wa.me/77073157509" target="_blank">WhatsApp: +77073157509</a>
+                        <a href="https://www.instagram.com/arystanali_u/" target="_blank">Instagram: @arystanali_u</a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-white/10 pt-6 text-center text-sm text-white/40">© 2026 Арыстанәлі Ұлдана. Барлық құқықтар қорғалған.</div>
+        </div>
+    </footer>
+
+    <!-- ===== MODAL (for tariff selection) ===== -->
+    <div id="tariffModal" class="modal-overlay" style="display:none;">
+        <div class="modal-content">
+            <div class="flex justify-between items-start mb-5">
+                <h3 class="text-2xl font-bold text-[#1A2A3A]">Тарифті таңдау</h3>
+                <button id="modalClose" class="p-1.5 rounded-lg hover:bg-[#F0F2F5] text-[#6B7A8A]"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+            </div>
+            <p id="modalTariffName" class="text-sm text-[#6B7A8A] mb-4">Standart — ₸50 000 /ай</p>
+            <form id="modalForm">
+                <div class="space-y-4">
+                    <div><label class="font-semibold text-sm block mb-1">Атыңыз</label><input type="text" id="modalName" class="input-field" placeholder="Атыңыз" required /></div>
+                    <div><label class="font-semibold text-sm block mb-1">WhatsApp нөмірі</label><input type="tel" id="modalPhone" class="input-field" placeholder="+7 707 315 7509" required /></div>
+                    <div><label class="font-semibold text-sm block mb-1">Байланыс уақыты</label><input type="text" id="modalTime" class="input-field" placeholder="Кешкі 18:00-20:00" /></div>
+                    <div class="flex items-start gap-3"><input type="checkbox" id="modalConsent" class="w-4 h-4 mt-1" required /><label class="text-sm text-[#6B7A8A]">Менің деректерімді өңдеуге келісемін</label></div>
+                    <button type="submit" class="btn-primary w-full justify-center">Өтінім жіберу</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ===== STICKY CTA (mobile) ===== -->
+    <div class="sticky-cta md:hidden">
+        <button class="btn-primary w-full justify-center" data-page="quiz">Тегін деңгейімді анықтау</button>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- ===== JAVASCRIPT ===== -->
+    <script>
+        (function() {
+            'use strict';
+
+            // ---- DATA ----
+            const LEVEL_DATA = {
+                a1: { label: 'Beginner (A1)', desc: 'Нөлден бастаушыларға', topics: ['Алфавит, сандар, танысу',
+                        'Қарапайым сөздер мен сөз тіркестері', 'Негізгі грамматика'
+                    ] },
+                a2: { label: 'Elementary (A2)', desc: 'Негіздерді білетіндерге', topics: ['Күнделікті тақырыптар',
+                        'Өзін таныстыру, әңгімелесу', 'Өткен/келер шақтар'
+                    ] },
+                b1: { label: 'Pre-Intermediate (B1)', desc: 'Орташа деңгейдегілерге', topics: [
+                        'Кең тақырыптарда сөйлесу', 'Пікір білдіру, дәлелдеу', 'Күрделі грамматика'
+                    ] }
+            };
+
+            const QUIZ_QUESTIONS = [{
+                id: 'level',
+                question: 'Қазіргі ағылшын деңгейіңіз қандай?',
+                options: [
+                    { label: 'Нөлден бастаймын', value: 'beginner' },
+                    { label: 'Негіздерді білемін', value: 'elementary' },
+                    { label: 'Орташа деңгей', value: 'intermediate' },
+                    { label: 'Білемін, бірақ сөйлей алмаймын', value: 'speaking_gap' }
+                ]
+            }, {
+                id: 'goal',
+                question: 'Ағылшынды не үшін үйренгіңіз келеді?',
+                options: [
+                    { label: 'Жұмыс үшін', value: 'work' },
+                    { label: 'Оқу үшін', value: 'study' },
+                    { label: 'Саяхат үшін', value: 'travel' },
+                    { label: 'Жалпы даму үшін', value: 'growth' }
+                ]
+            }, {
+                id: 'time',
+                question: 'Аптасына қанша уақыт бөле аласыз?',
+                options: [
+                    { label: '1–2 сағат', value: '1_2' },
+                    { label: '3–4 сағат', value: '3_4' },
+                    { label: '5+ сағат', value: '5_plus' }
+                ]
+            }, {
+                id: 'challenge',
+                question: 'Ағылшыннан басты қиындығыңыз қандай?',
+                options: [
+                    { label: 'Сөздерді ұмытып қаламын', value: 'vocab' },
+                    { label: 'Грамматика шатастырады', value: 'grammar' },
+                    { label: 'Сөйлеуге қорқамын', value: 'speaking' },
+                    { label: 'Түсіну қиын', value: 'listening' }
+                ]
+            }];
+
+            // ---- DOM refs ----
+            const pages = {
+                home: document.getElementById('page-home'),
+                program: document.getElementById('page-program'),
+                pricing: document.getElementById('page-pricing'),
+                quiz: document.getElementById('page-quiz'),
+                thankyou: document.getElementById('page-thankyou'),
+                privacy: document.getElementById('page-privacy'),
+                terms: document.getElementById('page-terms'),
+            };
+            const mobileMenu = document.getElementById('mobileMenu');
+            const mobileToggle = document.getElementById('mobileToggle');
+            const modal = document.getElementById('tariffModal');
+            const modalClose = document.getElementById('modalClose');
+            const modalForm = document.getElementById('modalForm');
+            const modalName = document.getElementById('modalName');
+            const modalPhone = document.getElementById('modalPhone');
+            const modalTime = document.getElementById('modalTime');
+            const modalConsent = document.getElementById('modalConsent');
+            const modalTariffName = document.getElementById('modalTariffName');
+            const quizContent = document.getElementById('quiz-content');
+            const quizStep = document.getElementById('quiz-step');
+            const quizPercent = document.getElementById('quiz-percent');
+            const quizProgressFill = document.getElementById('quiz-progress-fill');
+
+            let currentPage = 'home';
+            let quizAnswers = {};
+            let quizStepIndex = 0;
+            let selectedTariff = null;
+            let lang = 'kk';
+
+            // ---- Navigation ----
+            function navigate(page, data) {
+                // hide all pages
+                Object.values(pages).forEach(el => el.classList.remove('active'));
+                if (pages[page]) pages[page].classList.add('active');
+                currentPage = page;
+                // close mobile menu
+                mobileMenu.classList.remove('open');
+                // update URL hash
+                if (page === 'home') window.location.hash = '';
+                else window.location.hash = page;
+                // scroll to top
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                // if quiz, init
+                if (page === 'quiz') initQuiz(data);
+                // if thank you, do nothing special
+            }
+
+            // ---- Language ----
+            function setLang(l) {
+                lang = l;
+                document.querySelectorAll('.lang-btn').forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.lang === l);
+                });
+                localStorage.setItem('arystanali_lang', l);
+                // simple translation for demo (just switch some texts)
+                // For full translation, you'd need a full map — but this is a demo.
+                // We'll keep it simple: just switch the hero and a few key phrases.
+                const texts = {
+                    kk: {
+                        heroTitle: 'Ағылшынша түсінбей қалмаңыз — жүйелі түрде сөйлей бастаңыз',
+                        heroSub: 'Курс сізге өз деңгейіңізден бастауға, тұрақты практика құруға және мақсатыңызға сай ағылшын қолдануға көмектеседі.',
+                        heroCta: 'Тегін деңгейімді анықтау',
+                        heroCta2: 'Курс бағдарламасын көру',
+                    },
+                    ru: {
+                        heroTitle: 'Не теряйтесь в английском — начните говорить системно',
+                        heroSub: 'Курс поможет вам начать с вашего уровня, создать регулярную практику и использовать английский для ваших целей.',
+                        heroCta: 'Бесплатно определить уровень',
+                        heroCta2: 'Посмотреть программу курса',
+                    }
+                };
+                const t = texts[l] || texts.kk;
+                const h1 = document.querySelector('.page.active h1');
+                if (h1 && currentPage === 'home') {
+                    // update hero title
+                    const heroTitle = document.querySelector('.page.active h1');
+                    if (heroTitle) heroTitle.textContent = t.heroTitle;
+                    const heroSub = document.querySelector('.page.active .text-lg');
+                    if (heroSub) heroSub.textContent = t.heroSub;
+                    const btns = document.querySelectorAll('.page.active .btn-primary, .page.active .btn-outline');
+                    if (btns.length >= 2) {
+                        btns[0].textContent = t.heroCta;
+                        btns[1].textContent = t.heroCta2;
+                    }
+                }
+                // Quiz questions translation would need more work — for demo, keep as is.
+            }
+
+            // ---- Quiz ----
+            function initQuiz(prefill) {
+                quizAnswers = {};
+                quizStepIndex = 0;
+                if (prefill) quizAnswers.level = prefill;
+                renderQuizStep();
+            }
+
+            function renderQuizStep() {
+                const qs = QUIZ_QUESTIONS;
+                if (quizStepIndex >= qs.length) {
+                    // show result
+                    showQuizResult();
+                    return;
+                }
+                const q = qs[quizStepIndex];
+                const total = qs.length;
+                const progress = ((quizStepIndex) / total) * 100;
+                quizStep.textContent = quizStepIndex + 1;
+                quizPercent.textContent = Math.round(progress) + '%';
+                quizProgressFill.style.width = progress + '%';
+
+                let html = `<div class="mb-4"><h3 class="text-xl font-bold">${q.question}</h3></div><div class="space-y-2">`;
+                q.options.forEach(opt => {
+                    const selected = quizAnswers[q.id] === opt.value ? 'border-[#2D7D6B] bg-[#E8F3F0]' :
+                        'border-[#E5E9ED] hover:border-[#2D7D6B]';
+                    html +=
+                        `<button class="w-full text-left px-4 py-3 rounded-xl border transition-all text-sm font-medium ${selected}" data-qid="${q.id}" data-value="${opt.value}">${opt.label}</button>`;
+                });
+                html += '</div>';
+                quizContent.innerHTML = html;
+
+                // attach click listeners
+                quizContent.querySelectorAll('button[data-qid]').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const qid = this.dataset.qid;
+                        const value = this.dataset.value;
+                        quizAnswers[qid] = value;
+                        quizStepIndex++;
+                        renderQuizStep();
+                    });
+                });
+            }
+
+            function showQuizResult() {
+                const levelMap = { beginner: 'A1', elementary: 'A2', intermediate: 'B1', speaking_gap: 'A2-B1' };
+                const level = levelMap[quizAnswers.level] || 'A1';
+                quizContent.innerHTML = `
+                    <div class="text-center">
+                        <div class="w-20 h-20 rounded-full bg-[#E8F3F0] flex items-center justify-center mx-auto mb-4 text-4xl">🎯</div>
+                        <h2 class="text-2xl font-bold mb-2">Сізге ${level} бағыты жақын</h2>
+                        <p class="text-[#6B7A8A] mb-6">Толық нәтижені алу үшін атыңыз бен WhatsApp нөміріңізді қалдырыңыз.</p>
+                        <form id="quizContactForm">
+                            <div class="space-y-4">
+                                <input type="text" id="quizName" class="input-field" placeholder="Атыңыз" required />
+                                <input type="tel" id="quizPhone" class="input-field" placeholder="+7 707 315 7509" required />
+                                <div class="flex items-start gap-3"><input type="checkbox" id="quizConsent" class="w-4 h-4 mt-1" required /><label class="text-sm text-[#6B7A8A]">Менің деректерімді өңдеуге келісемін</label></div>
+                                <button type="submit" class="btn-primary w-full justify-center">Жіберу</button>
+                            </div>
+                        </form>
+                    </div>
+                `;
+                document.getElementById('quizContactForm').addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const name = document.getElementById('quizName').value.trim();
+                    const phone = document.getElementById('quizPhone').value.trim();
+                    const consent = document.getElementById('quizConsent').checked;
+                    if (!name || !phone || !consent) { alert('Барлық өрістерді толтырыңыз.'); return; }
+                    // Simulate lead submission
+                    console.log('[Lead]', { name, phone, consent, level, ...quizAnswers });
+                    alert('Өтінім қабылданды! Менеджер сізбен байланысады.');
+                    navigate('thankyou');
+                });
+                // update progress
+                quizStep.textContent = QUIZ_QUESTIONS.length;
+                quizPercent.textContent = '100%';
+                quizProgressFill.style.width = '100%';
+            }
+
+            // ---- Tariff Modal ----
+            function openModal(tariffId) {
+                const tariffMap = {
+                    standart: { name: 'Standart', price: '50 000' },
+                    pro: { name: 'Pro', price: '75 000' },
+                    individual: { name: 'Individual', price: '120 000' }
+                };
+                const t = tariffMap[tariffId];
+                if (!t) return;
+                selectedTariff = tariffId;
+                modalTariffName.textContent = `${t.name} — ₸${t.price} /ай`;
+                modal.style.display = 'flex';
+                modalName.value = '';
+                modalPhone.value = '';
+                modalTime.value = '';
+                modalConsent.checked = false;
+            }
+
+            function closeModal() {
+                modal.style.display = 'none';
+            }
+
+            // ---- Event Listeners ----
+            // Navigation via data-page
+            document.addEventListener('click', function(e) {
+                const target = e.target.closest('[data-page]');
+                if (target) {
+                    e.preventDefault();
+                    const page = target.dataset.page;
+                    const prefill = target.dataset.prefill || null;
+                    navigate(page, prefill);
+                }
+                // tariff buttons
+                const tariffBtn = e.target.closest('[data-tariff]');
+                if (tariffBtn) {
+                    e.preventDefault();
+                    openModal(tariffBtn.dataset.tariff);
+                }
+                // level tabs
+                const levelTab = e.target.closest('.level-tab');
+                if (levelTab) {
+                    e.preventDefault();
+                    const level = levelTab.dataset.level;
+                    document.querySelectorAll('.level-tab').forEach(b => {
+                        b.classList.remove('bg-[#2D7D6B]', 'text-white', 'shadow-lg');
+                        b.classList.add('bg-white', 'text-[#1E2B3A]');
+                    });
+                    levelTab.classList.add('bg-[#2D7D6B]', 'text-white', 'shadow-lg');
+                    levelTab.classList.remove('bg-white', 'text-[#1E2B3A]');
+                    const data = LEVEL_DATA[level];
+                    if (data) {
+                        const container = document.getElementById('level-content');
+                        container.innerHTML = `
+                            <h3 class="font-bold text-xl mb-1">${data.label}</h3>
+                            <p class="text-[#6B7A8A] mb-4">${data.desc}</p>
+                            <ul class="space-y-2">${data.topics.map(t => `<li class="flex items-center gap-3 text-[#1E2B3A]"><svg class="w-4 h-4 text-[#2D7D6B]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>${t}</li>`).join('')}</ul>
+                        `;
+                    }
+                }
+            });
+
+            // FAQ toggle
+            document.addEventListener('click', function(e) {
+                const q = e.target.closest('.faq-question');
+                if (q) {
+                    const answer = q.nextElementSibling;
+                    if (answer && answer.classList.contains('faq-answer')) {
+                        answer.classList.toggle('open');
+                        const svg = q.querySelector('svg');
+                        if (svg) svg.style.transform = answer.classList.contains('open') ? 'rotate(180deg)' : '';
+                    }
+                }
+            });
+
+            // Mobile toggle
+            mobileToggle.addEventListener('click', function() {
+                mobileMenu.classList.toggle('open');
+            });
+
+            // Modal close
+            modalClose.addEventListener('click', closeModal);
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) closeModal();
+            });
+
+            // Modal form submit
+            modalForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const name = modalName.value.trim();
+                const phone = modalPhone.value.trim();
+                const time = modalTime.value.trim();
+                const consent = modalConsent.checked;
+                if (!name || !phone || !consent) { alert('Барлық міндетті өрістерді толтырыңыз.'); return; }
+                console.log('[Lead]', { name, phone, time, consent, tariff: selectedTariff });
+                alert('Өтінім қабылданды! Менеджер сізбен байланысады.');
+                closeModal();
+                navigate('thankyou');
+            });
+
+            // Language switcher
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    setLang(this.dataset.lang);
+                });
+            });
+
+            // ---- Hash routing ----
+            window.addEventListener('hashchange', function() {
+                const hash = window.location.hash.replace('#', '') || 'home';
+                if (pages[hash]) navigate(hash);
+            });
+
+            // ---- Init ----
+            // Restore language
+            const savedLang = localStorage.getItem('arystanali_lang') || 'kk';
+            setLang(savedLang);
+
+            // Check hash on load
+            const initHash = window.location.hash.replace('#', '') || 'home';
+            if (pages[initHash]) navigate(initHash);
+            else navigate('home');
+
+            // If quiz has prefill from URL param (for audience cards)
+            const urlParams = new URLSearchParams(window.location.search);
+            const prefill = urlParams.get('prefill');
+            if (prefill && currentPage === 'quiz') {
+                // will be handled in navigate -> initQuiz
+            }
+
+            console.log('Сайт толығымен жұмыс істейді!');
+        })();
+    </script>
+
+</body>
+</html>
